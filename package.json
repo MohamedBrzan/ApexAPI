@@ -1,0 +1,37 @@
+{
+  "name": "apexapi",
+  "version": "1.0.0",
+  "description": "[![Node.js](https://img.shields.io/badge/Node.js-18.x-green)](https://nodejs.org/)\r [![Express](https://img.shields.io/badge/Express-5.x-blue)](https://expressjs.com/)\r [![Test Coverage](https://img.shields.io/badge/coverage-95%25-brightgreen)](https://github.com/MohamedBrzan/ApexAPI.git)\r [![CI/CD](https://github.com/MohamedBrzan/ApexAPI.git/actions/workflows/main.yml/badge.svg)](https://github.com/MohamedBrzan/ApexAPI.git/actions)\r [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)",
+  "main": "index.js",
+  "bin": {
+    "apexapi": "./bin/apexapi.js"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Mohamed Brzan",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^5.1.0",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.13.1",
+    "winston": "^3.17.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
