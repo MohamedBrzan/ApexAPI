@@ -1,26 +1,64 @@
 import express from 'express';
 import helmet from "helmet";
 import cors from "cors";
-import { rateLimit } from 'express-rate-limit'
+import dotenv from 'dotenv';
+import DBConnection from './src/config/database/DBConnection.js';
+import rateLimiting from './src/middleware/rateLimiting.js';
+import { requestLogger } from './src/middleware/logging.js';
+import mainRouter from './src/routes/index.js';
+import compression from 'compression';
 
-const app = express();
 const PORT = process.env.PORT || 3000;
 
-const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
-    standardHeaders: 'draft-8', // draft-6: `RateLimit-*` headers; draft-7 & draft-8: combined `RateLimit` header
-    legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
-    // store: ... , // Redis, Memcached, etc. See below.
-})
+const app = express();
 
-// Apply the rate limiting middleware to all requests
-app.use(limiter);
+dotenv.config();
+// connect to the database
+DBConnection();
+
+
+// =====================
+// Security Middleware
+// =====================
+app.use(helmet());
+app.use(cors({
+    origin: process.env.CORS_ORIGINS.split(','),
+    methods: process.env.CORS_METHODS.split(','),
+    allowedHeaders: process.env.CORS_HEADERS.split(','),
+    exposedHeaders: process.env.CORS_EXPOSE_HEADERS.split(','),
+    maxAge: process.env.CORS_MAX_AGE,
+    credentials: process.env.CORS_CREDENTIALS === 'true',
+    optionsSuccessStatus: 200,
+    preflightContinue: false,
+}));
+
+// =====================
+// Performance Middleware
+// =====================
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
-app.use(express.static('public'));
-app.use(helmet());
-app.use(cors());
+// Performance middleware
+app.use(compression());
+
+
+// =====================
+// Request Logging
+// =====================
+// Middleware for logging requests
+app.use(requestLogger);
+
+
+// =====================
+// API Routes
+// =====================
+app.use('/', mainRouter); // Mount all routes under /api base path
+
+
+
+// Apply the rate limiting middleware to all requests
+app.use(rateLimiting);
+
+
 
 
 app.use((req, res, next) => {
@@ -32,3 +70,5 @@ app.use((req, res, next) => {
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
+
+export default app;
