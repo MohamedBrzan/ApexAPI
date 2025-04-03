@@ -8,14 +8,14 @@ import { roleMiddleware } from '../middleware/roleMiddleware.js';
 const router = Router();
 
 router.post(
-    '/organizations',
+    '/create',
     IsAuthenticated(),
     validate(createOrganizationSchema),
     OrganizationController.createOrganization
 );
 
 router.put(
-    '/organizations/:id/subscription',
+    '/update/:id',
     IsAuthenticated(),
     roleMiddleware(['admin']),
     validate(updateSubscriptionSchema),
@@ -23,9 +23,23 @@ router.put(
 );
 
 router.get(
-    '/organizations/:id/audit',
+    '/:id/audit',
     IsAuthenticated(),
     OrganizationController.getAuditLogs
+);
+
+
+router.get(
+    '/:id',
+    IsAuthenticated(),
+    OrganizationController.getOrganization
+);
+
+router.delete(
+    '/delete/:id',
+    IsAuthenticated(),
+    roleMiddleware(['admin']),
+    OrganizationController.deleteOrganization
 );
 
 export default router;

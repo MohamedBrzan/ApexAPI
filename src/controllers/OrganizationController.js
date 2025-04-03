@@ -49,8 +49,7 @@ export default class OrganizationController {
             res.json({
                 success: true,
                 data: {
-                    plan: organization.subscription.plan,
-                    status: organization.subscription.status
+                    organization: sanitizeOrganization(organization.toObject()),
                 },
                 meta: {
                     updatedBy: req.user.id,
@@ -196,6 +195,34 @@ export default class OrganizationController {
             });
         } catch (error) {
             next(error);
+        }
+    }
+
+    /**
+     * @desc    Delete organization
+     * @route   DELETE /api/v1/organizations/:id
+     * @access  Private/Admin
+     */
+    static async deleteOrganization(req, res, next) {
+        try {
+            const organization = await OrganizationService.deleteOrganization(
+                req.params.id
+            );
+
+            if (!organization) {
+                throw new ApiError(404, 'Organization not found');
+            }
+
+            res.json({
+                success: true,
+                message: 'Organization deleted successfully',
+                meta: {
+                    deletedBy: req.user.id,
+                    audit: req.auditTrail
+                }
+            });
+        } catch (error) {
+            next(new ApiError(400, error.message));
         }
     }
 }

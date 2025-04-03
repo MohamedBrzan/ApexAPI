@@ -28,4 +28,8 @@ export default class OrganizationService {
             { new: true }
         );
     }
+
+    static async deleteOrganization(orgId) {
+        return Organization.findByIdAndDelete(orgId);
+    }
 }

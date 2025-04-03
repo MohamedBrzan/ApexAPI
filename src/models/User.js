@@ -37,6 +37,11 @@ const userSchema = new mongoose.Schema({
         minlength: [8, 'Password must be at least 8 characters'],
         select: false
     },
+    organization: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Organization',
+        required: [true, 'Please provide an organization']
+    },
     isEmailVerified: {
         type: Boolean,
         default: false

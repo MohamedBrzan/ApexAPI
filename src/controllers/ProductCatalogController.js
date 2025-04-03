@@ -80,11 +80,15 @@ export class ProductCatalogController {
      */
     static async updateInventory(req, res, next) {
         try {
-            const inventoryUpdate = await ProductCatalogService.updateInventory(
+            const inventoryUpdate = await ProductCatalogService.updateProduct(
                 req.params.id,
-                req.body,
-                req.user.organization
+                req.body
             );
+            console.log(`Inventory update: ${JSON.stringify(inventoryUpdate)}`);
+
+            if (!inventoryUpdate) {
+                throw new ApiError(404, 'Product not found');
+            }
 
             res.json({
                 success: true,
@@ -93,7 +97,7 @@ export class ProductCatalogController {
                     previousStock: inventoryUpdate.previousStock
                 },
                 meta: {
-                    variant: inventoryUpdate.variant,
+                    variant: inventoryUpdate.variants,
                     warehouse: inventoryUpdate.warehouseLocation
                 }
             });
@@ -237,6 +241,34 @@ export class ProductCatalogController {
             });
         } catch (error) {
             next(new ApiError(404, 'Product not found'));
+        }
+    }
+
+    /**
+     * @desc    Delete product
+     * @route   DELETE /api/v1/products/:id
+     * @access  Private/ProductManager
+     */
+    static async deleteProduct(req, res, next) {
+        try {
+            const deletedProduct = await ProductCatalogService.deleteProduct(
+                req.params.id,
+                req.user.organization
+            );
+
+            if (!deletedProduct) {
+                throw new ApiError(404, 'Product not found');
+            }
+
+            res.json({
+                success: true,
+                data: null,
+                meta: {
+                    deletedProductId: deletedProduct._id
+                }
+            });
+        } catch (error) {
+            next(new ApiError(400, error.message));
         }
     }
 }

@@ -20,10 +20,16 @@ router.get(
 );
 
 router.patch(
-    '/products/:id/inventory',
+    '/update/:id/inventory',
     IsAuthenticated(),
     validate(updateInventorySchema),
     ProductCatalogController.updateInventory
+);
+
+router.delete(
+    '/delete/:id',
+    IsAuthenticated(),
+    ProductCatalogController.deleteProduct
 );
 
 export default router;
