@@ -8,7 +8,7 @@ const router = Router();
 
 router.post(
     '/posts',
-    IsAuthenticated,
+    IsAuthenticated(),
     validate(createPostSchema),
     PostController.createPost
 );

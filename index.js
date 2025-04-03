@@ -8,6 +8,20 @@ import { requestLogger } from './src/middleware/logging.js';
 import mainRouter from './src/routes/index.js';
 import compression from 'compression';
 
+process.on('uncaughtException', (err) => {
+    console.error('Uncaught Exception:', err);
+    // Handle the error (e.g., log it, send an alert, etc.)
+    // Optionally, exit the process if necessary
+    process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+    // Handle the error (e.g., log it, send an alert, etc.)
+    // Optionally, exit the process if necessary
+    process.exit(1);
+});
+
 const PORT = process.env.PORT || 3000;
 
 const app = express();

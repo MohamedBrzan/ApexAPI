@@ -13,6 +13,39 @@ export default class UserService {
         return user.toObject();
     }
 
+    static async getUserById(userId) {
+        const user = await User.findById(userId);
+        if (!user) throw new Error('User not found');
+        return user.toObject();
+    }
+
+    static async updateUser(userId, updateData) {
+        const user = await User.findById(userId);
+        if (!user) throw new Error('User not found');
+
+        Object.keys(updateData).forEach(key => {
+            user[key] = updateData[key];
+        });
+
+        await user.save();
+        return user.toObject();
+    }
+
+    static async deleteUser(userId) {
+        const user = await User.findById(userId);
+        if (!user) throw new Error('User not found');
+
+        await TokenService.revokeAllTokensForUser(user._id);
+
+        // Soft delete (preferred)
+        // user.status = 'deleted';
+        // await user.save();
+
+        // Or hard delete
+        await user.deleteOne();
+        return { message: 'User deleted successfully' };
+    }
+
     static async sendVerificationEmail(user) {
         const token = crypto.randomBytes(32).toString('hex');
         user.emailVerificationToken = crypto

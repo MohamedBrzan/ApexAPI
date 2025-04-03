@@ -9,14 +9,14 @@ const router = Router();
 
 router.post(
     '/organizations',
-    IsAuthenticated,
+    IsAuthenticated(),
     validate(createOrganizationSchema),
     OrganizationController.createOrganization
 );
 
 router.put(
     '/organizations/:id/subscription',
-    IsAuthenticated,
+    IsAuthenticated(),
     roleMiddleware(['admin']),
     validate(updateSubscriptionSchema),
     OrganizationController.updateSubscription
@@ -24,7 +24,7 @@ router.put(
 
 router.get(
     '/organizations/:id/audit',
-    IsAuthenticated,
+    IsAuthenticated(),
     OrganizationController.getAuditLogs
 );
 

@@ -8,7 +8,7 @@ const router = Router();
 
 router.post(
     '/posts/:postId/comments',
-    IsAuthenticated,
+    IsAuthenticated(),
     validate(createCommentSchema),
     CommentController.createComment
 );
@@ -21,14 +21,14 @@ router.get(
 
 router.patch(
     '/comments/:commentId',
-    IsAuthenticated,
+    IsAuthenticated(),
     validate(updateCommentSchema),
     CommentController.updateComment
 );
 
 router.delete(
     '/comments/:commentId',
-    IsAuthenticated,
+    IsAuthenticated(),
     CommentController.deleteComment
 );
 

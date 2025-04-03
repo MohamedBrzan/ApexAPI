@@ -6,13 +6,13 @@ const router = Router();
 
 router.get(
     '/requests/metrics',
-    IsAuthenticated,
+    IsAuthenticated(),
     APIRequestController.getRequestMetrics
 );
 
 router.get(
     '/requests/errors',
-    IsAuthenticated,
+    IsAuthenticated(),
     APIRequestController.getRecentErrors
 );
 

@@ -23,7 +23,7 @@ export default class UserController {
             res.status(201).json({
                 success: true,
                 data: {
-                    user: UserService.sanitizeUser(user),
+                    user: sanitizeUser(user),
                     accessToken: tokens.accessToken
                 },
                 meta: {
@@ -141,7 +141,7 @@ export default class UserController {
 
             res.json({
                 success: true,
-                data: UserService.sanitizeUser(user),
+                data: sanitizeUser(user),
                 meta: {
                     cache: req.cacheStatus
                 }
@@ -156,7 +156,7 @@ export default class UserController {
             const user = await UserService.updateUser(req.user.id, req.body);
             res.json({
                 success: true,
-                data: UserService.sanitizeUser(user),
+                data: sanitizeUser(user),
                 meta: {
                     changes: req.auditTrail
                 }
@@ -178,7 +178,7 @@ export default class UserController {
             logger.info(`User updated: ${user.email}`);
             res.json({
                 success: true,
-                data: UserService.sanitizeUser(user)
+                data: sanitizeUser(user)
             });
         } catch (error) {
             logger.error(`Update user error: ${error.message}`);

@@ -6,13 +6,13 @@ const router = Router();
 
 router.get(
     '/events/correlation/:correlationId',
-    IsAuthenticated,
+    IsAuthenticated(),
     EventLogController.getEventsByCorrelation
 );
 
 router.post(
     '/events/replay/:aggregateId',
-    IsAuthenticated,
+    IsAuthenticated(),
     EventLogController.replayEvents
 );
 

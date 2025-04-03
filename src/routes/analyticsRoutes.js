@@ -7,14 +7,14 @@ const router = Router();
 
 router.get(
     '/metrics',
-    IsAuthenticated,
+    IsAuthenticated(),
     cacheMiddleware('5 minutes'),
     AnalyticsController.getSystemMetrics
 );
 
 router.get(
     '/endpoints/:endpoint',
-    IsAuthenticated,
+    IsAuthenticated(),
     AnalyticsController.getEndpointAnalytics
 );
 

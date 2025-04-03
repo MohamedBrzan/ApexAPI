@@ -21,13 +21,13 @@ router.post(
 
 router.get(
     '/me',
-    IsAuthenticated,
+    IsAuthenticated(),
     UserController.getProfile
 );
 
 router.patch(
     '/:id',
-    IsAuthenticated,
+    IsAuthenticated(),
     roleMiddleware(['admin']),
     validate(updateProfileSchema),
     UserController.updateUser
@@ -35,7 +35,7 @@ router.patch(
 
 router.delete(
     '/:id',
-    IsAuthenticated,
+    IsAuthenticated(),
     roleMiddleware(['admin']),
     UserController.deleteUser
 );

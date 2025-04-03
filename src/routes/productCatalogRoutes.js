@@ -8,7 +8,7 @@ const router = Router();
 
 router.post(
     '/products',
-    IsAuthenticated,
+    IsAuthenticated(),
     validate(createProductSchema),
     ProductCatalogController.createProduct
 );
@@ -21,7 +21,7 @@ router.get(
 
 router.patch(
     '/products/:id/inventory',
-    IsAuthenticated,
+    IsAuthenticated(),
     validate(updateInventorySchema),
     ProductCatalogController.updateInventory
 );

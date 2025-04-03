@@ -6,13 +6,13 @@ const router = Router();
 
 router.post(
     '/notifications',
-    IsAuthenticated,
+    IsAuthenticated(),
     NotificationController.createNotification
 );
 
 router.get(
     '/notifications/status/:notificationId',
-    IsAuthenticated,
+    IsAuthenticated(),
     NotificationController.getNotificationStatus
 );
 
