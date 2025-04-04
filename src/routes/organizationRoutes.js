@@ -7,6 +7,13 @@ import { roleMiddleware } from '../middleware/roleMiddleware.js';
 
 const router = Router();
 
+router.get(
+    '/',
+    IsAuthenticated(),
+    roleMiddleware(['admin']),
+    OrganizationController.getAllOrganizations
+);
+
 router.post(
     '/create',
     IsAuthenticated(),

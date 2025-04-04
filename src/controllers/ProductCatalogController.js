@@ -4,6 +4,81 @@ import { logger } from '../middleware/logging.js';
 import { sanitizeProduct } from '../utils/sanitizers.js';
 
 export class ProductCatalogController {
+
+    /**
+     * @desc    Get all products
+     * @route   GET /api/v1/products
+     * @access  Public/Private
+     */
+    static async getAllProducts(req, res, next) {
+        try {
+            const { page = 1, limit = 25, sort = '-createdAt' } = req.query;
+            const products = await ProductCatalogService.getAllProducts({
+                page: parseInt(page),
+                limit: parseInt(limit),
+                sort,
+                organization: req.user?.organization
+            });
+
+            res.json({
+                success: true,
+                data: products.map(sanitizeProduct),
+                meta: {
+                    total: products.length,
+                    page: parseInt(page),
+                    limit: parseInt(limit)
+                }
+            });
+        } catch (error) {
+            next(new ApiError(400, 'Invalid query parameters'));
+        }
+    }
+
+    /**
+     * @desc    Get all products by organization ID
+     * @route   GET /api/v1/products/org/:orgId
+     * @access  Private/ProductManager
+     */
+    static async getAllProductsByOrgId(req, res, next) {
+        try {
+            const products = await ProductCatalogService.getAllProductsByOrgId(
+                req.params.orgId
+            );
+
+            res.json({
+                success: true,
+                data: products.map(sanitizeProduct),
+                meta: {
+                    total: products.length
+                }
+            });
+        } catch (error) {
+            next(new ApiError(404, 'Organization not found'));
+        }
+    }
+
+    /**
+     * @desc    Get all products by id
+     * @route   GET /api/v1/products/:id
+     * @access  Private/ProductManager
+     */
+    static async getProductById(req, res, next) {
+        try {
+            const product = await ProductCatalogService.getProductById(req.params.id);
+
+            if (!product) {
+                throw new ApiError(404, 'Product not found');
+            }
+
+            res.json({
+                success: true,
+                data: sanitizeProduct(product)
+            });
+        } catch (error) {
+            next(new ApiError(404, error.message));
+        }
+    }
+
     /**
      * @desc    Create new product
      * @route   POST /api/v1/products

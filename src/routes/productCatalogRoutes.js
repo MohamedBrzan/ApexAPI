@@ -6,6 +6,18 @@ import { validate } from '../middleware/validationMiddleware.js';
 
 const router = Router();
 
+router.get(
+    '/',
+    IsAuthenticated(),
+    ProductCatalogController.getAllProducts
+);
+
+router.get(
+    '/:id',
+    IsAuthenticated(),
+    ProductCatalogController.getProductById
+);
+
 router.post(
     '/products',
     IsAuthenticated(),

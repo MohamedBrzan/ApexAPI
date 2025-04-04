@@ -1,6 +1,26 @@
 import Organization from '../models/Organization.js';
 
 export default class OrganizationService {
+
+    static async getAllOrganizations(page = 1, limit = 50) {
+
+        const skip = (page - 1) * limit;
+        const organizations = await Organization.find()
+            .skip(skip)
+            .limit(limit)
+            .sort({ createdAt: -1 });
+
+        const totalCount = await Organization.countDocuments();
+        return {
+            organizations,
+            totalCount
+        };
+    }
+
+    static async getOrganizationById(orgId) {
+        return Organization.findById(orgId);
+    }
+
     static async createOrganization(orgData) {
         return Organization.create(orgData);
     }

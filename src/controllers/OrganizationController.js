@@ -4,6 +4,34 @@ import { logger } from '../middleware/logging.js';
 import { sanitizeOrganization } from '../utils/sanitizers.js';
 
 export default class OrganizationController {
+
+    /**
+     * @desc    Get all organizations
+     * @route   GET /api/v1/organizations
+     * @access  Private/Admin
+     */
+    static async getAllOrganizations(req, res, next) {
+        try {
+            const { page = 1, limit = 50 } = req.query;
+            const organizations = await OrganizationService.getAllOrganizations(
+                parseInt(page),
+                parseInt(limit)
+            );
+
+            res.json({
+                success: true,
+                data: sanitizeOrganization(organizations.organizations),
+                meta: {
+                    page: parseInt(page),
+                    limit: parseInt(limit),
+                    totalPages: Math.ceil(organizations.totalCount / limit)
+                }
+            });
+        } catch (error) {
+            next(new ApiError(500, 'Failed to retrieve organizations'));
+        }
+    }
+
     /**
      * @desc    Create new organization
      * @route   POST /api/v1/organizations

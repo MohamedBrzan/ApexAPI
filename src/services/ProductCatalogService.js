@@ -2,6 +2,24 @@ import ProductCatalog from '../models/ProductCatalog.js';
 
 export default class ProductCatalogService {
 
+    static async getAllProducts({ page, limit, sort, organization }) {
+        const options = {
+            page: page || 1,
+            limit: limit || 25,
+            sort: sort || '-createdAt',
+            populate: 'variants'
+        };
+
+        return ProductCatalog.find({ organization })
+            .sort(options.sort)
+            .skip((options.page - 1) * options.limit)
+            .limit(options.limit);
+    }
+
+    static async getAllProductsByOrgId(orgId) {
+        return ProductCatalog.find({ organization: orgId }).populate('variants');
+    }
+
     static async createProduct(productData) {
         const product = new ProductCatalog(productData);
         return product.save();
@@ -103,6 +121,13 @@ export default class ProductCatalogService {
             organization: orgId,
             createdAt: { $gte: startDate, $lte: endDate }
         });
+    }
+
+    static async searchProducts(query) {
+        return ProductCatalog.find(
+            { $text: { $search: query } },
+            { score: { $meta: "textScore" } }
+        ).sort({ score: { $meta: "textScore" } });
     }
 
     static async getProductsBySearch(orgId, searchQuery) {
