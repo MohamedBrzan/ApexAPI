@@ -128,8 +128,4 @@ export default class UserService {
             throw new Error('Error updating login success information');
         }
     }
-
-    static async comparePassword(candidatePassword, userPassword) {
-        return await bcrypt.compare(candidatePassword, userPassword);
-    }
 }

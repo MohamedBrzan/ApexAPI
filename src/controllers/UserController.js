@@ -68,7 +68,7 @@ export default class UserController {
             }
 
             // Verify password
-            const isMatch = await UserService.comparePassword(password, user.password);
+            const isMatch = await user.correctPassword(password, user.password);
             if (!isMatch) {
                 await UserService.handleFailedLoginAttempt(user._id);
                 logger.warn(`Failed login attempt for user: ${user._id}`);
